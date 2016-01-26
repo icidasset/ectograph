@@ -17,7 +17,17 @@ Ectograph is a set of utility functions for using [Ecto](https://github.com/elix
 ## How to use
 
 ```elixir
+Ectograph.Type.cast_type(:string, :ecto_to_graphql)
+# %GraphQL.Type.String{}
 
+Ectograph.Type.cast_type({ :array, :integer }, :ecto_to_graphql)
+# %GraphQL.Type.List{ ofType: :integer }
+
+Ectograph.Type.cast_type(%GraphQL.Type.String{}, :graphql_to_ecto)
+# :string
+
+Ectograph.Type.cast_type(%GraphQL.Type.List{ ofType: :integer }, :graphql_to_ecto)
+# { :array, :integer }
 ```
 
 
