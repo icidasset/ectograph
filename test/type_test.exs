@@ -1,4 +1,4 @@
-defmodule EctographTest do
+defmodule EctographTest.Type do
   use ExUnit.Case
 
   doctest Ectograph.Type
@@ -8,10 +8,7 @@ defmodule EctographTest do
       EctographTest.Schemas.Quote.__schema__(:types),
       fn(t) ->
         ecto_type = elem(t, 1)
-          |> Ecto.Type.type
-
-        graphql_cast = ecto_type
-          |> Ectograph.Type.cast_type(:ecto_to_graphql)
+        graphql_cast = Ectograph.Type.cast_type(ecto_type, :ecto_to_graphql)
 
         assert elem(graphql_cast, 0) == :ok
 

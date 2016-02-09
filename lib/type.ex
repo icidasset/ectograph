@@ -1,6 +1,5 @@
 defmodule Ectograph.Type do
 
-  # Defaults
   @map %{
     :array      => %{ is_built_in: true, name: "List" },
     :boolean    => %{ is_built_in: true, name: "Boolean" },
@@ -14,7 +13,15 @@ defmodule Ectograph.Type do
   }
 
 
-  # Special cases
+  # More info: https://github.com/elixir-lang/ecto/blob/db1f9ccdcc01f5abffcab0b5e0732eeecd93aa19/lib/ecto/schema.ex#L145
+  @custom_ecto_types %{
+    :date       => "Date",
+    :datetime   => "DateTime",
+    :time       => "Time",
+    :uuid       => "UUID",
+  }
+
+
   defp get_graphql_struct_attributes(base_ecto_type, arg) do
     case base_ecto_type do
       :array    -> %{ ofType: elem(arg, 1) }
@@ -24,7 +31,9 @@ defmodule Ectograph.Type do
   end
 
 
-  defp get_base_ecto_type(ecto_type) do
+  defp get_base_ecto_type(arg) do
+    ecto_type = Ecto.Type.type(arg)
+
     cond do
       is_tuple(ecto_type) -> elem(ecto_type, 0)
       true -> ecto_type
@@ -33,16 +42,23 @@ defmodule Ectograph.Type do
 
 
   defp get_ecto_type(base_ecto_type, arg) do
-    case base_ecto_type do
+    t = case base_ecto_type do
       :array    -> { :array, Map.from_struct(arg)[:ofType] }
 
-      _         -> base_ecto_type
+      _         -> nil
     end
+
+    unless t do
+      t = Map.get(@custom_ecto_types, base_ecto_type)
+      t = if t, do: Module.concat(Ecto, t), else: base_ecto_type
+    end
+
+    t
   end
 
 
   @doc """
-    Cast a Ecto type (atom | tuple) to a GraphQL type (struct).
+    Cast a Ecto type (atom | tuple | module) to a GraphQL type (struct).
 
     @return { :ok | :error, value }
   """
