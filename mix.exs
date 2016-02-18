@@ -3,7 +3,7 @@ defmodule Ectograph.Mixfile do
 
   def project do
     [app: :ectograph,
-     version: "0.1.0",
+     version: "0.0.1",
      elixir: "~> 1.2",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
@@ -35,8 +35,8 @@ defmodule Ectograph.Mixfile do
   #
   defp deps do
     [
-      { :ecto, "~> 1.1.0" },
-      { :graphql, "~> 0.1.0" },
+      { :ecto, "~> 1.1.3" },
+      { :graphql, "~> 0.1.2" },
     ]
   end
 
