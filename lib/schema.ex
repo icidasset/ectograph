@@ -15,8 +15,6 @@ defmodule Ectograph.Schema do
       if (elem(type_cast, 0) === :ok) do
         Map.put(acc, elem(t, 0), elem(type_cast, 1))
       else
-        IO.inspect(t)
-
         acc
       end
     end
