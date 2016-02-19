@@ -10,10 +10,15 @@ defmodule Ectograph.Schema do
     types = arg.__schema__(:types)
 
     fields = Enum.reduce types, %{}, fn t, acc ->
-      type_cast = Ectograph.Type.cast_type(elem(t, 1), :ecto_to_graphql)
+      name = elem(t, 0)
+      type = elem(t, 1)
 
-      if (elem(type_cast, 0) === :ok) do
-        Map.put(acc, elem(t, 0), elem(type_cast, 1))
+      type_cast = Ectograph.Type.cast_type(type, :ecto_to_graphql)
+      type_cast_state = elem(type_cast, 0)
+      type = elem(type_cast, 1)
+
+      if (type_cast_state === :ok) do
+        Map.put(acc, name, %{ type: type })
       else
         acc
       end
