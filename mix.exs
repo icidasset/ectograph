@@ -39,6 +39,9 @@ defmodule Ectograph.Mixfile do
     [
       { :ecto, "~> 1.1.3" },
       { :graphql, "~> 0.1.2" },
+
+      { :earmark, "~> 0.1", only: :dev },
+      { :ex_doc, "~> 0.11", only: :dev },
     ]
   end
 
