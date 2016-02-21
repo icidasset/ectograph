@@ -85,6 +85,11 @@ Missing features:
 
 - Casting a GraphQL schema to an Ecto schema (not sure how to implement this)
 
+Things I haven't tried yet:
+
+- Associations
+- Embedded schemas
+
 Ecto types that still have to be implemented:
 
 - binary
