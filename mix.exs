@@ -26,6 +26,7 @@ defmodule Ectograph.Mixfile do
     [
       files: ["lib", "mix.exs", "README.md"],
       maintainers: ["Steven Vandevelde"],
+      licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/icidasset/ectograph"}
     ]
   end
