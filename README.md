@@ -59,6 +59,11 @@ Ectograph.Type.cast_type(%GraphQL.Type.List{ ofType: :integer }, :graphql_to_ect
 # { :array, :integer }
 ```
 
+##### Example
+
+You can find a working example at [https://github.com/icidasset/key_maps](https://github.com/icidasset/key_maps).  
+The crucial bit is located at `lib/graphql/definitions.ex`.
+
 
 
 ## Installation
