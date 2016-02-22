@@ -30,7 +30,7 @@ end
 defmodule Schemas.Quote do
   use Ecto.Schema
 
-  schema "quote" do
+  schema "quotes" do
     field :quote, :string
     field :author, :string
 
@@ -40,7 +40,7 @@ defmodule Schemas.Quote do
 end
 
 Ectograph.Schema.cast_schema(Schemas.Quote, :ecto_to_graphql)
-# %GraphQL.Type.ObjectType{ ... }
+# %GraphQL.Type.ObjectType{ name: "quotes", fields: %{ quote: %{ type: ... }}}
 ```
 
 ##### Types
