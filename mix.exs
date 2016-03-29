@@ -37,7 +37,7 @@ defmodule Ectograph.Mixfile do
   #
   defp deps do
     [
-      { :ecto, "~> 1.1.3" },
+      { :ecto, "~> 1.1.5" },
       { :graphql, "~> 0.2.0" },
 
       { :earmark, "~> 0.2.1", only: :dev },
