@@ -1,2 +1,0 @@
-defmodule Ectograph do
-end

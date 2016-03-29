@@ -120,15 +120,9 @@ defmodule Ectograph.Type do
       """
   end
 
-
   defimpl GraphQL.Types, for: Custom.GraphQL.DateTime do
-    def parse_value(_, value) do
-      DateFormat.parse!(value, "{ISO}")
-    end
-
-    def serialize(_, value) do
-      DateFormat.format!(value, "{ISOz}")
-    end
+    def parse_value(_, value), do: DateFormat.parse!(value, "{ISO}")
+    def serialize(_, value), do: DateFormat.format!(value, "{ISOz}")
   end
 
 end
