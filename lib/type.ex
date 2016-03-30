@@ -24,9 +24,19 @@ defmodule Ectograph.Type do
 
   defp get_graphql_struct_attributes(base_ecto_type, arg) do
     case base_ecto_type do
-      :array    -> %{ ofType: elem(arg, 1) }
+      :array ->
+        array_item_type = cast_type(
+          elem(arg, 1),
+          :ecto_to_graphql
+        )
 
-      _         -> %{}
+        if elem(array_item_type, 0) === :ok do
+          %{ ofType: elem(array_item_type, 1) }
+        else
+          nil
+        end
+
+      _ -> %{}
     end
   end
 
@@ -43,9 +53,19 @@ defmodule Ectograph.Type do
 
   defp get_ecto_type(base_ecto_type, arg) do
     t = case base_ecto_type do
-      :array    -> { :array, Map.from_struct(arg)[:ofType] }
+      :array ->
+        array_item_type = cast_type(
+          Map.from_struct(arg)[:ofType],
+          :graphql_to_ecto
+        )
 
-      _         -> nil
+        if elem(array_item_type, 0) === :ok do
+          { :array, elem(array_item_type, 1) }
+        else
+          nil
+        end
+
+      _ -> nil
     end
 
     unless t do
@@ -78,12 +98,17 @@ defmodule Ectograph.Type do
           graphql_type_def.name
         ])
 
-        map = struct(
-          graph_module,
-          get_graphql_struct_attributes(base_ecto_type, arg)
+        graphql_struct_attributes = get_graphql_struct_attributes(
+          base_ecto_type,
+          arg
         )
 
-        { :ok, map }
+        if graphql_struct_attributes do
+          map = struct(graph_module, graphql_struct_attributes)
+          { :ok, map }
+        else
+          { :error }
+        end
     end
   end
 
