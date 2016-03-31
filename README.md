@@ -73,7 +73,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
   1. Add ectograph to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:ectograph, "~> 0.0.2"}]
+          [{:ectograph, "~> 0.0.3"}]
         end
 
   2. Ensure ectograph is started before your application:
