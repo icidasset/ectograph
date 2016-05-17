@@ -8,8 +8,10 @@ defmodule Ectograph.Type do
     :id         => %{ is_built_in: true, name: "ID" },
     :integer    => %{ is_built_in: true, name: "Int" },
     :map        => %{ is_built_in: true, name: "JSON" },
-    :string     => %{ is_built_in: true, name: "String" },
+
+    :string     => %{ is_built_in: true, name: "String", closest: true },
     :uuid       => %{ is_built_in: true, name: "String" },
+    :binary_id  => %{ is_built_in: true, name: "String" },
   }
 
 
@@ -36,7 +38,8 @@ defmodule Ectograph.Type do
           nil
         end
 
-      _ -> %{}
+      _ ->
+        %{}
     end
   end
 
@@ -125,8 +128,15 @@ defmodule Ectograph.Type do
 
     base_ecto_type = @map
       |> Map.to_list
-      |> Enum.find(fn(m) -> elem(m, 1)[:name] == graphql_type end)
-      |> elem(0)
+      |> Enum.filter(fn(m) -> elem(m, 1)[:name] == graphql_type end)
+
+    base_ecto_type = if (length(base_ecto_type) > 1) do
+      Enum.find(base_ecto_type, fn(m) -> elem(m, 1)[:closest] == true end)
+    else
+      Enum.at(base_ecto_type, 0)
+    end
+
+    base_ecto_type = elem(base_ecto_type, 0)
 
     case base_ecto_type do
       nil -> { :error }

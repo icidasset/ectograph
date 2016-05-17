@@ -5,7 +5,7 @@ Ectograph is a set of utility functions for using [Ecto](https://github.com/elix
 ```
 defp deps do
   [
-    { :ecto, "~> 2.0.0-beta.2" },
+    { :ecto, "~> 2.0.0-rc.5" },
     { :graphql, "~> 0.2.0" }
   ]
 end
@@ -73,7 +73,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
   1. Add ectograph to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:ectograph, "~> 0.0.4"}]
+          [{:ectograph, "~> 0.0.5"}]
         end
 
   2. Ensure ectograph is started before your application:
@@ -98,7 +98,6 @@ Things I haven't tried yet:
 Ecto types that still have to be implemented:
 
 - binary
-- binary_id
 - [decimal](https://github.com/ericmj/decimal)
 - date
 - time
