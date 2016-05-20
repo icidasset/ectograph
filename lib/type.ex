@@ -157,7 +157,7 @@ defmodule Ectograph.Type do
 
   defimpl GraphQL.Types, for: Custom.GraphQL.DateTime do
     def parse_value(_, value), do: Ecto.DateTime.cast!(value)
-    def serialize(_, value), do: Ecto.DateTime.to_string(value)
+    def serialize(_, value), do: Ecto.DateTime.to_iso8601(value)
   end
 
 end

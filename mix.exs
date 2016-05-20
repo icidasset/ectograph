@@ -4,7 +4,7 @@ defmodule Ectograph.Mixfile do
   def project do
     [app: :ectograph,
      description: "Ectograph is a set of utility functions for using Ecto in combination with GraphQL (joshprice/graphql-elixir)",
-     version: "0.0.7",
+     version: "0.0.8",
      elixir: "~> 1.2",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
