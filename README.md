@@ -1,28 +1,22 @@
-# Ectograph
-
-Ectograph is a set of utility functions for using [Ecto](https://github.com/elixir-lang/ecto) in combination with GraphQL (specifically [this graphql library](https://github.com/joshprice/graphql-elixir) for Elixir).
+__Ectograph is a set of utility functions for using [Ecto](https://github.com/elixir-lang/ecto) in combination with [graphql-elixir/graphql](https://github.com/graphql-elixir/graphql).__
 
 ```
-defp deps do
-  [
-    { :ecto, "~> 2.0.0-rc.5" },
-    { :graphql, "~> 0.2.0" }
-  ]
-end
+{
+  :ecto, "~> 2.0.0-rc.6",
+  :graphql, "~> 0.3.1"
+}
 ```
 
-
-
-## Features
+Features:
 
 - Map a Ecto.Type to a GraphQL.Type
 - Map a Ecto.Schema to a GraphQL.Type.ObjectType
-- Map a GraphQL.Type to a Ecto.Type
 - Provide extra GraphQL types, such as DateTime
+- Utilities to help build a GraphQL schema
 
 
 
-## How to use
+### How to use
 
 ##### Schemas
 
@@ -39,41 +33,81 @@ defmodule Schemas.Quote do
 
 end
 
-Ectograph.Schema.cast_schema(Schemas.Quote, :ecto_to_graphql)
+Ectograph.Schema.cast(Schemas.Quote)
 # %GraphQL.Type.ObjectType{ name: "quotes", fields: %{ quote: %{ type: ... }, ... }}
 ```
 
 ##### Types
 
 ```elixir
-Ectograph.Type.cast_type(:string, :ecto_to_graphql)
+Ectograph.Type.cast(:string)
 # %GraphQL.Type.String{}
 
-Ectograph.Type.cast_type({ :array, :integer }, :ecto_to_graphql)
+Ectograph.Type.cast({ :array, :integer })
 # %GraphQL.Type.List{ ofType: :integer }
-
-Ectograph.Type.cast_type(%GraphQL.Type.String{}, :graphql_to_ecto)
-# :string
-
-Ectograph.Type.cast_type(%GraphQL.Type.List{ ofType: :integer }, :graphql_to_ecto)
-# { :array, :integer }
 ```
 
-##### Example
 
-You can find a working example at [https://github.com/icidasset/key_maps](https://github.com/icidasset/key_maps).  
-The crucial bit is located at `lib/graphql/definitions.ex`.
+##### Utilities
+
+```elixir
+schema = %GraphQL.Schema{
+  query: %GraphQL.Type.ObjectType{
+    name: "Queries",
+    description: "GraphQL Queries",
+    fields: %{
+      quotes: Ectograph.Definitions.build(Quote, :all, ~w()a),
+      quote: Ectograph.Definitions.build(Quote, :get, ~w(id)a),
+    },
+  },
+}
+
+# BUILD FUNCTION:
+# Quote   = Resolver module
+# :get    = method on resolver that will be called
+# ~w(id)a = List of fields that will be used as arguments
+
+# NOTE:
+# Either the resolver itself is an Ecto schema,
+# or you define a function called 'ecto_schema' that
+# returns the Ecto schema.
+```
+
+See the [integration tests](/test/integration_test.exs)
+for a working example, and the docs for more info.
+
+```elixir
+# Adding extra arguments to a query
+Ectograph.Definitions.extend_arguments(
+  put_field_aka_definition_here,
+  %{ extra_argument: %{ type: GraphQL.Type.String }}
+)
+
+# Adding extra fields to a query
+Ectograph.Definitions.extend_type_fields(
+  put_field_aka_definition_here,
+  %{ extra_field: %{ type: GraphQL.Type.Int }}
+)
+
+# Adding associations
+Ectograph.Definitions.add_association(
+  put_field_aka_definition_here,
+  Resolver,
+  :association_name,
+  :multiple # or :single (default = :single)
+)
+```
 
 
 
-## Installation
+### Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
 
   1. Add ectograph to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:ectograph, "~> 0.0.8"}]
+          [{:ectograph, "~> 0.1.0"}]
         end
 
   2. Ensure ectograph is started before your application:
@@ -84,16 +118,12 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 
 
-## To do
+### To do
 
-Missing features:
+Things that are missing or could be improved
 
-- Casting a GraphQL schema to an Ecto schema (not sure how to implement this)
-
-Things I haven't tried yet:
-
-- Associations
 - Embedded schemas
+- Associations
 
 Ecto types that still have to be implemented:
 
