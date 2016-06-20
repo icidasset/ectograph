@@ -122,7 +122,7 @@ defmodule Ectograph.Definitions do
   #
 
   defp get_ecto_schema(resolver) do
-    if Enum.member?(resolver.__info__(:functions), :ecto_schema),
+    if Keyword.has_key?(resolver.__info__(:functions), :ecto_schema),
       do: resolver.ecto_schema,
     else: resolver
   end
