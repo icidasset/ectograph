@@ -4,7 +4,7 @@ defmodule Ectograph.Mixfile do
   def project do
     [app: :ectograph,
      description: "Ectograph is a set of utility functions for using Ecto in combination with GraphQL",
-     version: "0.1.1",
+     version: "0.1.2",
      elixir: "~> 1.2",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
@@ -37,11 +37,11 @@ defmodule Ectograph.Mixfile do
   #
   defp deps do
     [
-      { :ecto, "~> 2.0.0-rc.6" },
+      { :ecto, "~> 2.0.2" },
       { :graphql, "~> 0.3.1" },
 
       { :earmark, "~> 0.2.1", only: :dev },
-      { :ex_doc, "~> 0.11.4", only: :dev },
+      { :ex_doc, "~> 0.12.0", only: :dev },
     ]
   end
 
