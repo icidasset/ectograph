@@ -7,7 +7,7 @@ defmodule Ectograph.Type do
     :float      => "Float",
     :id         => "ID",
     :integer    => "Int",
-    :map        => "JSON",
+    :map        => "Map",
 
     :string     => "String",
     :uuid       => "String",
@@ -17,6 +17,7 @@ defmodule Ectograph.Type do
 
   @map_custom [
     "DateTime",
+    "Map"
   ]
 
 
@@ -83,7 +84,7 @@ defmodule Ectograph.Type do
 
 
 
-  # Custom types
+  # {custom-type} DateTime
   #
   defmodule Custom.DateTime do
     defstruct name: "DateTime", description:
@@ -96,6 +97,42 @@ defmodule Ectograph.Type do
     def parse_value(_, value), do: Ecto.DateTime.cast!(value)
     def serialize(_, value), do: Ecto.DateTime.to_iso8601(value)
     def parse_literal(_, value), do: value
+  end
+
+
+
+  # {custom-type} Map
+  #
+  defmodule Custom.Map do
+    defstruct name: "Map", description:
+      """
+      A custom type that translates ...
+
+      ```
+      createMutation (
+        argument: { example: "test" }
+      ) {}
+      ```
+
+      into an elixir map.
+      """
+
+    def parse(value) do
+      if is_map(value) && Map.has_key?(value, :fields) do
+        Enum.reduce value.fields, %{}, fn(f, acc) ->
+          Map.put(acc, f.name.value, f.value.value)
+        end
+      else
+        value
+      end
+    end
+
+  end
+
+  defimpl GraphQL.Types, for: Custom.Map do
+    def parse_value(_, value), do: Custom.Map.parse(value)
+    def serialize(_, value), do: value
+    def parse_literal(_, value), do: Custom.Map.parse(value)
   end
 
 end

@@ -98,6 +98,51 @@ Ectograph.Definitions.add_association(
 )
 ```
 
+##### Maps
+
+How to use maps as arguments in mutations:
+
+```elixir
+defmodule Example do
+  use Ecto.Schema
+
+  schema "examples" do
+    field :attributes, :map
+  end
+
+  def create(_, args, _) do
+    is_map? args[:attributes] # true
+  end
+end
+
+schema = %GraphQL.Schema{
+  mutation: %GraphQL.Type.ObjectType{
+    fields: %{
+      create: Ectograph.Definitions.build(Example, :create, ~w(attributes)a),
+    },
+  },
+}
+```
+
+Query:
+
+```
+mutation _ {
+  create (attributes: { example: "test" }) { attributes }
+}
+```
+
+Query with variables:
+
+```
+mutation _ ($attributes: Map) {
+  create (attributes: $attributes) { attributes }
+}
+```
+
+_Note: Apparently it doesn't matter which type you put there._
+_Could be `$attributes: Object` too._
+
 
 
 ### Installation
@@ -107,7 +152,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
   1. Add ectograph to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:ectograph, "~> 0.1.2"}]
+          [{:ectograph, "~> 0.2.0"}]
         end
 
   2. Ensure ectograph is started before your application:

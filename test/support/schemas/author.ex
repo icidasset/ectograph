@@ -36,4 +36,20 @@ defmodule EctographTest.Schemas.Author do
     has_many :quotes, EctographTest.Schema.Quote
   end
 
+
+  def all(_, _, _), do: all
+  def all, do: @test_data
+
+  def get(params, _, _), do: get_by_id(params.id)
+  def get_by_id(id), do: Enum.find(@test_data, &(&1.id == id))
+
+  def create(params, _, _) do
+    Map.merge(
+      params,
+      %{
+        id: 30,
+      }
+    )
+  end
+
 end

@@ -8,7 +8,8 @@ defmodule EctographTest.Schema do
 
 
   setup_all do
-    create_args = ~w(quote revision rating related_authors)a
+    create_quote_args = ~w(quote revision rating related_authors)a
+    create_author_args = ~w(name info)a
 
     extra_arg = %{ extra_arg: %{ type: %GraphQL.Type.String{} }}
     extra_fld = %{ extra_fld: %{ type: %GraphQL.Type.String{} }}
@@ -32,10 +33,13 @@ defmodule EctographTest.Schema do
         description: "GraphQL Mutations",
         fields: %{
           createQuote: (
-            Definitions.build(Quote, :create, create_args)
+            Definitions.build(Quote, :create, create_quote_args)
             |> Definitions.extend_arguments(extra_arg)
             |> Definitions.extend_type_fields(extra_fld)
           ),
+          createAuthor: (
+            Definitions.build(Author, :create, create_author_args)
+          )
         },
       },
     }
@@ -148,6 +152,40 @@ defmodule EctographTest.Schema do
     assert q["quote"] == "Integration"
     assert q["extra_fld"] == "HI FROM TEST"
     assert List.first(q["related_authors"]) == 20
+  end
+
+
+  test "should be able to create an author", context do
+    query = ~S[
+      mutation _ (
+        $name: String,
+        $info: Map
+      ) {
+        createAuthor (
+          name: $name,
+          info: $info
+        ) {
+          id, name, info
+        }
+      }]
+
+    # execute
+    { state, result } = GraphQL.execute(
+      context.schema,
+      query,
+      %{
+        name: "Test Author",
+        info: %{ info: "test" }
+      }
+    )
+
+    q = result.data["createAuthor"]
+
+    # assertions
+    assert state == :ok
+    assert q["id"] == "30"
+    assert q["name"] == "Test Author"
+    assert q["info"][:info] == "test"
   end
 
 end
