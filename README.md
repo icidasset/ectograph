@@ -80,13 +80,13 @@ for a working example, and the docs for more info.
 # Adding extra arguments to a query
 Ectograph.Definitions.extend_arguments(
   put_field_aka_definition_here,
-  %{ extra_argument: %{ type: GraphQL.Type.String }}
+  %{ extra_argument: %{ type: %GraphQL.Type.String{} }}
 )
 
 # Adding extra fields to a query
 Ectograph.Definitions.extend_type_fields(
   put_field_aka_definition_here,
-  %{ extra_field: %{ type: GraphQL.Type.Int }}
+  %{ extra_field: %{ type: %GraphQL.Type.Int{} }}
 )
 
 # Adding associations
